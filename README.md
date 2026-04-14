@@ -1,8 +1,8 @@
 # No Run Hotkey
 
-A RuneLite plugin that lets you temporarily disable **"Walk here"** by holding a hotkey.
+Temporarily disable **"Walk here"** by holding a hotkey.
 
-Perfect for avoiding yellow clicks when trying to attack NPCs with tricky clickboxes, or when NPCs die just before you click on them.
+Perfect for avoiding yellow clicks when trying to attack NPCs with tricky clickboxes, or when NPCs die right before you click on them.
 
 ## Example Use Cases
 

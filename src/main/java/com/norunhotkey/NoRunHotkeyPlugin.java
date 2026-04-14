@@ -18,7 +18,7 @@ import java.awt.event.KeyEvent;
 @Slf4j
 @PluginDescriptor(
         name = "No Run Hotkey",
-        description = "Hold a hotkey to temporarily remove the 'Walk here' menu option. Stop yellow clicking today.",
+        description = "Hold a hotkey to temporarily remove the 'Walk here' menu option.",
         tags = { "menu", "walk", "hide", "hotkey", "run", "misclick" }
 )
 public class NoRunHotkeyPlugin extends Plugin implements KeyListener
