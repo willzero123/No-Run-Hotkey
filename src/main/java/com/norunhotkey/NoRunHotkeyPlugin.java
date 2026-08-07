@@ -2,10 +2,10 @@ package com.norunhotkey;
 
 import com.google.inject.Provides;
 import javax.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.events.ClientTick;
+import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
@@ -15,7 +15,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 
 import java.awt.event.KeyEvent;
 
-@Slf4j
 @PluginDescriptor(
         name = "No Run Hotkey",
         description = "Hold a hotkey to temporarily remove the 'Walk here' menu option.",
@@ -32,7 +31,7 @@ public class NoRunHotkeyPlugin extends Plugin implements KeyListener
     @Inject
     private KeyManager keyManager;
 
-    private boolean hotkeyPressed = false;
+    private boolean hotkeyPressed;
 
     @Provides
     NoRunHotkeyConfig provideConfig(ConfigManager configManager)
@@ -50,24 +49,21 @@ public class NoRunHotkeyPlugin extends Plugin implements KeyListener
     protected void shutDown()
     {
         keyManager.unregisterKeyListener(this);
+        hotkeyPressed = false;
     }
 
     @Subscribe
-    public void onClientTick(ClientTick event)
+    public void onMenuEntryAdded(MenuEntryAdded event)
     {
         if (!hotkeyPressed)
         {
             return;
         }
 
-        MenuEntry[] entries = client.getMenuEntries();
-        MenuEntry[] filtered = java.util.Arrays.stream(entries)
-                .filter(entry -> !entry.getOption().equalsIgnoreCase("Walk here"))
-                .toArray(MenuEntry[]::new);
-
-        if (filtered.length != entries.length)
+        MenuEntry entry = event.getMenuEntry();
+        if (entry.getType() == MenuAction.WALK)
         {
-            client.setMenuEntries(filtered);
+            client.getMenu().removeMenuEntry(entry);
         }
     }
 
@@ -87,6 +83,12 @@ public class NoRunHotkeyPlugin extends Plugin implements KeyListener
         {
             hotkeyPressed = false;
         }
+    }
+
+    @Override
+    public void focusLost()
+    {
+        hotkeyPressed = false;
     }
 
     @Override
